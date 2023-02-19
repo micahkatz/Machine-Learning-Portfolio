@@ -1,0 +1,136 @@
+---
+title: "Classification"
+author: "Micah Katz"
+date: "2/17/2023"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+editor_options:
+  chunk_output_type: inline
+---
+
+## How Linear Models For Classification Work
+
+Linear Models for Classification allow for prediction of the classifications of items through linear means. We find where the boundary is between two classifications of a set of data and use a linear system to describe it.
+
+## Dataset
+
+<https://www.kaggle.com/datasets/thedevastator/global-video-game-sales>
+
+## Import Dataset
+
+```{r}
+library(caret)
+vgsales <- read.csv("vgsales.csv")
+vgsales$Platform <- as.factor(vgsales$Platform)
+```
+
+## Split into 80/20 training data
+
+We split the data using the `sample()` function and make sure to split the data 80/20 between training and testing. We find the index to split the data on and assign it to `i` and then separate the data between training and testing.
+
+```{r}
+i <- sample(1:nrow(vgsales), 0.80*nrow(vgsales), replace=FALSE)
+training <- vgsales[i, ]
+testing <- vgsales[-i, ]
+```
+
+## Functions for data exploration
+
+Here we are using different functions to explore the given data. `str()` will give us the structure of the data. `summary()` will give us a summary of the data. `hist()` will give us a histogram and we are plotting a histogram of the North America Sales. The `cor()` function will tell us the correlation of NA_Sales to EU_Sales. The `head()` function will show the first 6 rows of the training data.
+
+```{r}
+str(training)
+summary(training)
+hist(training$NA_Sales)
+cor(training[,c("NA_Sales", "EU_Sales")])
+head(training)
+```
+
+## Graphs for Data Exploration
+
+We use `ggplot2` to graph a scatter plot of the training data of the North American Sales vs the Global Sales. We then plot a bar graph of Number of Video Games by Genre
+
+```{r}
+library(ggplot2)
+
+ggplot(training, aes(x = NA_Sales, y = Global_Sales)) +
+  geom_point() +
+  labs(title = "North American Sales vs Global Sales",
+       x = "North American Sales",
+       y = "Global Sales")
+
+ggplot(training, aes(x = Genre)) +
+  geom_bar(fill = "blue") +
+  labs(title = "Number of Video Games by Genre",
+       x = "Genre",
+       y = "Count")
+
+```
+
+## Logistic Regression Model for Classification
+
+Here we are building a logistic regression model that will predict the Platform for a game based on the genre of the game. We get in the summary the deviance residuals that show how well the model fits the data. We have Min which is the smallest residual, the first quartile is 1Q, then we have the median, the third quartile, and the maximum. We then see the coefficients that correspond to each genre. These tell us the estimates of the coefficients, the standard error, the z value, and the p values. We then get the null deviance and residual deviance which tells us the deviance if there were no predictors, and the deviance of the model that was fitted, respectively.
+
+```{r}
+logistic_model <- glm(Platform ~ Genre, data = training, family = binomial())
+summary(logistic_model)
+```
+
+## Naive Bayes Model
+
+Here we are using the `e1071` library to call the `naiveBayes()` function. We are predicting which `Platform` a game will be based on its `Genre` . This method will assume that `Genre` and `Platform` are independent which is the "naive" approach.
+
+```{r}
+library(e1071)
+
+nb_model <- naiveBayes(Platform ~ Genre, data = training)
+
+print(nb_model)
+```
+
+## Comparing Models
+
+Here we are comparing the two models using the predictions. We use the MSE and Correlation to compare the models and output the results.
+
+```{r}
+# Predict on test data using logistic regression model
+logistic_preds <- predict(logistic_model, newdata = testing, type = 'response')
+logistic_preds <- factor(ifelse(logistic_preds > 0.5, "Wii", "NES"), levels = levels(testing$Platform))
+
+
+
+nb_preds <- predict(nb_model, newdata = testing)
+nb_preds <- factor(nb_preds, levels = levels(testing$Platform))
+
+logistic_cm <- table(logistic_preds, testing$Platform)
+nb_cm <- table(nb_preds, testing$Platform)
+
+logistic_recall <- confusionMatrix(logistic_cm)$byClass['Recall']
+logistic_accuracy <- confusionMatrix(logistic_cm)$overall['Accuracy']
+logistic_precision <- confusionMatrix(logistic_cm)$byClass['Precision']
+
+nb_recall <- confusionMatrix(nb_cm)$byClass['Recall']
+nb_accuracy <- confusionMatrix(nb_cm)$overall['Accuracy']
+nb_precision <- confusionMatrix(nb_cm)$byClass['Precision']
+
+cat("Logistic Regression:\n")
+cat("Accuracy: ", logistic_accuracy, "\n")
+cat("Precision: ", logistic_precision, "\n")
+cat("Recall: ", logistic_recall, "\n")
+
+cat("Naive Bayes:\n")
+cat("Accuracy: ", nb_accuracy, "\n")
+cat("Precision: ", nb_precision, "\n")
+cat("Recall: ", nb_recall, "\n")
+
+```
+
+## Strengths and weaknesses of Naïve Bayes and Logistic Regression
+
+It seems that the Naive Bayes is more accurate than the logistic regression in this case.
+
+## Benefits, drawbacks of each of the classification metrics
+
+There are benefits to the Naive Bayes method. If your factors are truly independent then it is a great way to determine that. As for the logistic regression, it is better for determining values that fall into separate categories and are able to be separated by a line.

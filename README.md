@@ -15,3 +15,11 @@ My source code and document for my C++ data exploration project
 You can view the document [here](Cpp-Data-Exploration.pdf)
 
 You can view the source code [here](cpp-data-exploration.cpp)
+
+## Linear Models
+
+My R-Markdown PDFs for both Regression and Classification in relation to Linear Models in R.
+
+You can view my Regression document [here](linear-models/regression.pdf).
+
+You can view my Correlation document [here](linear-models/classification.pdf).
