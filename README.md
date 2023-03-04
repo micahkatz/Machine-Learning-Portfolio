@@ -23,3 +23,11 @@ My R-Markdown PDFs for both Regression and Classification in relation to Linear 
 You can view my Regression document [here](linear-models/regression.pdf).
 
 You can view my Correlation document [here](linear-models/classification.pdf).
+
+## C++ Algorithms from Scratch
+
+You can view the source code for Logistic Regression [here](cpp-from-scratch/logistic-regression.cpp)
+
+You can view the source code for Naive Bayes [here](cpp-from-scratch/naive-bayes.cpp)
+
+You can view the full document [here](cpp-from-scratch/cpp-from-scratch.pdf)
