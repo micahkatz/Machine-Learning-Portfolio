@@ -31,3 +31,7 @@ You can view the source code for Logistic Regression [here](cpp-from-scratch/log
 You can view the source code for Naive Bayes [here](cpp-from-scratch/naive-bayes.cpp)
 
 You can view the full document [here](cpp-from-scratch/cpp-from-scratch.pdf)
+
+## Similarity and Ensemble
+
+You can view the full document [here](similarity-and-ensemble/part5.pdf)
