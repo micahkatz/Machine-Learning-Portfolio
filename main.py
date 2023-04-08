@@ -11,7 +11,7 @@ from sklearn.metrics import classification_report
 csv_pandas = pd.read_csv('auto.csv')
 
 # Output the first few rows
-print(csv_pandas.head(3))
+print(csv_pandas.head())
 print()
 
 # Output the dimensions of the data
@@ -40,18 +40,18 @@ print()
 # Modify columns
 csv_pandas['mpg_high'] = np.where(csv_pandas['mpg'] > csv_pandas['mpg'].mean(), 1, 0)
 csv_pandas.drop(columns=['mpg', 'name'], inplace=True)
-print(csv_pandas.head(3))
+print(csv_pandas.head())
 print()
 
 # Data exploration with graphs
 sns.catplot(x='mpg_high', kind='count', data=csv_pandas)
-sns.relplot(x='horsepower', y='weight', style='mpg_high', data=csv_pandas)
+sns.relplot(x='horsepower', y='weight', hue='mpg_high', style='mpg_high', data=csv_pandas)
 sns.boxplot(x='mpg_high', y='weight', data=csv_pandas)
 
 # Train/test split
 X = csv_pandas.drop(columns=['mpg_high'])
 y = csv_pandas['mpg_high']
-training_for_x, testing_for_x, training_for_y, testing_for_y = train_test_split(X, y, test_size=0.2, random_state=1234)
+training_for_x, testing_for_x, training_for_y, testing_for_y = train_test_split(X, y, test_size=0.2, random_state=4321)
 
 print(training_for_x.shape, testing_for_x.shape)
 
@@ -72,14 +72,14 @@ predicted_y = dtc.predict(testing_for_x)
 print(classification_report(testing_for_y, predicted_y))
 
 # Neural Network
-neuralNetwork = MLPClassifier(hidden_layer_sizes=(16, 8), max_iter=1000)
+neuralNetwork = MLPClassifier(hidden_layer_sizes=(10, 5), max_iter=1000)
 neuralNetwork.fit(training_for_x, training_for_y)
 
 predicted_y = neuralNetwork.predict(testing_for_x)
 
 print(classification_report(testing_for_y, predicted_y, zero_division=0))
 
-neuralNetwork2 = MLPClassifier(hidden_layer_sizes=(8, 4), max_iter=100)
+neuralNetwork2 = MLPClassifier(hidden_layer_sizes=(20, 10), max_iter=500)
 neuralNetwork2.fit(training_for_x, training_for_y)
 
 predicted_y = neuralNetwork2.predict(testing_for_x)
@@ -87,12 +87,3 @@ predicted_y = neuralNetwork2.predict(testing_for_x)
 print(classification_report(testing_for_y, predicted_y))
 
 # Analysis
-
-# a. which algorithm performed better? 
-#   Algorithm 1
-# b. compare accuracy, recall and precision metrics by class  
-#   Algorithm 1 had better metrics
-# c. give your analysis of why the better-performing algorithm might have outperformed the other 
-#   Due to more iterations, algorithm 1 outperformed
-# d. write a couple of sentences comparing your experiences using R versus sklearn. Feel free to express strong preferences.  
-#   Sklearn is easier than R but R is more readable

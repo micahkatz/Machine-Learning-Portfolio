@@ -39,3 +39,4 @@ You can view the full document [here](similarity-and-ensemble/part5.pdf)
 ## Machine Learning in Python with sklearn
 
 You can view the full code [here](ml-with-sklearn/main.py)
+You can view the pdf [here](ml-with-sklearn/mjk180006-asg-sklearn.pdf)
