@@ -35,3 +35,7 @@ You can view the full document [here](cpp-from-scratch/cpp-from-scratch.pdf)
 ## Similarity and Ensemble
 
 You can view the full document [here](similarity-and-ensemble/part5.pdf)
+
+## Machine Learning in Python with sklearn
+
+You can view the full code [here](ml-with-sklearn/main.py)
